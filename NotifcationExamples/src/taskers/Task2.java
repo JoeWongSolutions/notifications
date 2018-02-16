@@ -10,7 +10,7 @@ import javafx.application.Platform;
 
 /**
  *
- * @author dalemusser
+ * @author dalemusser, Joe Wong
  * 
  * This example uses a Notification functional interface.
  * This allows the use of anonymous inner classes or
