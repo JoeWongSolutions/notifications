@@ -13,6 +13,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -21,7 +22,7 @@ import taskers.*;
 /**
  * FXML Controller class
  *
- * @author dalemusser
+ * @author dalemusser, Joe Wong
  */
 public class NotificationsUIController implements Initializable, Notifiable {
 
@@ -31,6 +32,13 @@ public class NotificationsUIController implements Initializable, Notifiable {
     private Task1 task1;
     private Task2 task2;
     private Task3 task3;
+    
+    @FXML
+    private Button button1;
+    @FXML
+    private Button button2;
+    @FXML
+    private Button button3;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -49,11 +57,18 @@ public class NotificationsUIController implements Initializable, Notifiable {
     
     @FXML
     public void startTask1(ActionEvent event) {
-        System.out.println("start task 1");
         if (task1 == null) {
+            System.out.println("start task 1");
             task1 = new Task1(2147483647, 1000000);
             task1.setNotificationTarget(this);
+            button1.textProperty().setValue("End Task 1");
             task1.start();
+        }
+        else if (task1.getState() == Thread.State.RUNNABLE){
+            System.out.println("stop task 1");
+            task1.end();
+            task1 = null;
+            button1.textProperty().setValue("Start Task 1");
         }
     }
     
@@ -61,6 +76,7 @@ public class NotificationsUIController implements Initializable, Notifiable {
     public void notify(String message) {
         if (message.equals("Task1 done.")) {
             task1 = null;
+            button1.textProperty().setValue("Start Task 1");
         }
         textArea.appendText(message + "\n");
     }
@@ -72,10 +88,19 @@ public class NotificationsUIController implements Initializable, Notifiable {
             task2 = new Task2(2147483647, 1000000);
             task2.setOnNotification((String message) -> {
                 textArea.appendText(message + "\n");
+                if (message.equals("Task2 done.")){
+                    button2.textProperty().setValue("Start Task 2");
+                }
             });
-            
+            button2.textProperty().setValue("End Task 2");           
             task2.start();
-        }        
+        }
+        else if (task2.getState() == Thread.State.RUNNABLE){
+            System.out.println("stop task 2");
+            task2.end();
+            task2 = null;
+            button2.textProperty().setValue("Start Task 2");
+        }
     }
     
     @FXML
@@ -85,10 +110,21 @@ public class NotificationsUIController implements Initializable, Notifiable {
             task3 = new Task3(2147483647, 1000000);
             // this uses a property change listener to get messages
             task3.addPropertyChangeListener((PropertyChangeEvent evt) -> {
-                textArea.appendText((String)evt.getNewValue() + "\n");
+                String message = (String)evt.getNewValue();
+                textArea.appendText(message + "\n");
+                if (message.equals("Task3 done.")){
+                    button3.textProperty().setValue("Start Task 3");
+                }
             });
             
             task3.start();
+            button3.textProperty().setValue("End Task 3");
+        }
+        else if (task3.getState() == Thread.State.RUNNABLE){
+            System.out.println("stop task 3");
+            task3.end();
+            task3 = null;
+            button3.textProperty().setValue("Start Task 3");
         }
     } 
 }

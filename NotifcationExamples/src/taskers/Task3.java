@@ -11,7 +11,7 @@ import javafx.application.Platform;
 
 /**
  *
- * @author dalemusser
+ * @author dalemusser, Joe Wong
  * 
  * This example uses PropertyChangeSupport to implement
  * property change listeners.
